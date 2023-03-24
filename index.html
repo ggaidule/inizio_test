@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Custom Search Bar</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <label for="q">Search Google:</label>
+    <input type="text" id="q" name="q">
+    <input type="button" value="Search" onclick="searchGoogle()">
+    <input type="button" value="Save Results" onclick="saveResults()">
+    <div id="searchResults"></div>
+    <div id="savedResults"></div>
+
+    <script>
+        // Replace YOUR_API_KEY with your actual API key
+		var apiKey = "AIzaSyA75V6nWkMpMUqROUhEg-HsMhIS6IUWjkM";
+		var cx = "c2d43f76a34aa488e";
+
+        var searchResults = [];
+
+        function searchGoogle() {
+            var query = $("#q").val();
+            var url = "https://www.googleapis.com/customsearch/v1?key=" + apiKey + "&cx=" + cx + "&q=" + query + "&num=10";
+            $.get(url, function(data) {
+                searchResults = data.items;
+                var html = "";
+                for (var i = 0; i < searchResults.length; i++) {
+                    html += "<div><h3><a href='" + searchResults[i].link + "'>" + searchResults[i].title + "</a></h3><p>" + searchResults[i].snippet + "</p></div>";
+                }
+                $("#searchResults").html(html);
+            });
+        }
+
+        function saveResults() {
+            if (searchResults.length === 0) {
+                alert("No search results to save.");
+                return;
+            }
+            var savedHtml = "";
+            for (var i = 0; i < searchResults.length; i++) {
+                savedHtml += "<div><h3><a href='" + searchResults[i].link + "'>" + searchResults[i].title + "</a></h3><p>" + searchResults[i].snippet + "</p></div>";
+            }
+            $("#savedResults").html(savedHtml);
+        }
+    </script>
+</body>
+</html>
